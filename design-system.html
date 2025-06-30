@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZoneFunnel Design System</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Early Theme Loader to prevent FOUC -->
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme');
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.add('light');
+             document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {
+          console.warn('Could not read theme from localStorage');
+        }
+      })();
+    </script>
+    
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Playfair Display', 'serif'],
+            },
+            colors: {
+              'ds-accent-primary': '#F2B880',
+              'ds-accent-primary-hover': '#f5c599',
+              'ds-accent-secondary': '#C8A376',
+              
+              'ds-text-primary': '#4C433D',
+              'ds-text-secondary': '#7d736d',
+              'ds-text-on-accent': '#402D1A',
+
+              'ds-bg-primary': '#FCFBF9',
+              'ds-bg-secondary': '#FAF6F1',
+              'ds-bg-tertiary': '#F5F0EB',
+
+              'ds-border': '#EAE4DD',
+
+              'dark-ds-accent-primary': '#F2B880',
+              'dark-ds-accent-primary-hover': '#ffcf9e',
+              'dark-ds-accent-secondary': '#C8A376',
+
+              'dark-ds-text-primary': '#F0EBE5',
+              'dark-ds-text-secondary': '#a8a19c',
+              'dark-ds-text-on-accent': '#402D1A',
+
+              'dark-ds-bg-primary': '#1C1A19',
+              'dark-ds-bg-secondary': '#2A2624',
+              'dark-ds-bg-tertiary': '#3a322d',
+              
+              'dark-ds-border': '#4C433D',
+
+              'system-success': '#22c55e',
+              'system-error': '#ef4444',
+              'system-warning': '#f59e0b',
+              'system-info': '#3b82f6',
+            },
+            boxShadow: {
+                'sm': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+                'md': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                'lg': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1)',
+                'xl': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+                
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Embedded Styles -->
+    <style type="text/tailwindcss">
+      @layer base {
+          :root {
+            scroll-behavior: smooth;
+            scroll-padding-top: 6rem;
+          }
+          body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+      }
+      @layer components {
+          .sidebar-link {
+            @apply block text-sm text-ds-text-secondary dark:text-dark-ds-text-secondary hover:text-ds-text-primary dark:hover:text-dark-ds-text-primary font-medium py-2 px-4 rounded-lg transition-all;
+          }
+          .sidebar-link.active {
+            @apply bg-ds-bg-secondary dark:bg-dark-ds-bg-secondary text-ds-text-primary dark:text-dark-ds-text-primary font-bold;
+          }
+          .section-container {
+            @apply pt-12 pb-24 border-t border-ds-border dark:border-dark-ds-border;
+          }
+          .section-title {
+            @apply font-display text-4xl text-ds-text-primary dark:text-dark-ds-text-primary mb-4;
+          }
+          .section-subtitle {
+            @apply text-lg text-ds-text-secondary dark:text-dark-ds-text-secondary mb-8 max-w-3xl;
+          }
+          .component-preview {
+            @apply bg-ds-bg-secondary dark:bg-dark-ds-bg-secondary p-8 rounded-xl border border-ds-border dark:border-dark-ds-border;
+          }
+          .component-title {
+            @apply text-xl font-bold font-sans text-ds-text-primary dark:text-dark-ds-text-primary mb-6;
+          }
+          .component-group {
+            @apply space-y-8;
+          }
+          .component-row {
+            @apply flex flex-wrap items-center gap-6;
+          }
+          .component-label {
+            @apply font-mono text-xs text-ds-text-secondary dark:text-dark-ds-text-secondary w-24 flex-shrink-0;
+          }
+          .swatch {
+              @apply w-full h-24 rounded-lg shadow-md;
+          }
+          .swatch-info {
+              @apply mt-2 text-sm;
+          }
+          .swatch-name {
+              @apply font-bold text-ds-text-primary dark:text-dark-ds-text-primary;
+          }
+          .swatch-meta {
+              @apply text-ds-text-secondary dark:text-dark-ds-text-secondary font-mono text-xs;
+          }
+          .code-block {
+              @apply bg-ds-bg-tertiary dark:bg-dark-ds-bg-tertiary text-ds-text-secondary dark:text-dark-ds-text-secondary p-4 rounded-md text-sm font-mono whitespace-pre-wrap;
+          }
+      }
+    </style>
+</head>
+<body class="bg-ds-bg-primary dark:bg-dark-ds-bg-primary transition-colors duration-300">
+
+    <div class="relative flex">
+        <!-- Sidebar -->
+        <aside class="fixed top-0 left-0 h-full w-64 border-r border-ds-border dark:border-dark-ds-border overflow-y-auto pt-8 px-4 bg-ds-bg-primary dark:bg-dark-ds-bg-primary">
+            <h1 class="text-xl font-bold font-display text-ds-text-primary dark:text-dark-ds-text-primary px-4 mb-8">ZoneFunnel DS</h1>
+            <nav id="sidebar-nav" class="space-y-4">
+              <div>
+                <h2 class="px-4 text-xs font-bold uppercase text-ds-text-secondary dark:text-dark-ds-text-secondary tracking-wider mb-2">Foundations</h2>
+                <a href="#colors" class="sidebar-link">Colors</a>
+                <a href="#typography" class="sidebar-link">Typography</a>
+                <a href="#spacing" class="sidebar-link">Spacing & Grid</a>
+                <a href="#icons" class="sidebar-link">Icons</a>
+              </div>
+               <div>
+                <h2 class="px-4 text-xs font-bold uppercase text-ds-text-secondary dark:text-dark-ds-text-secondary tracking-wider mb-2">Components</h2>
+                <a href="#buttons" class="sidebar-link">Buttons</a>
+                <a href="#forms" class="sidebar-link">Forms & Inputs</a>
+                <a href="#cards" class="sidebar-link">Cards</a>
+                <a href="#navigation" class="sidebar-link">Navigation</a>
+                <a href="#feedback" class="sidebar-link">Feedback</a>
+                <a href="#data-display" class="sidebar-link">Data Display</a>
+              </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 w-[calc(100%-16rem)] min-h-screen">
+            <!-- Header -->
+            <header class="sticky top-0 z-10 flex items-center justify-between h-20 px-8 bg-ds-bg-primary/80 dark:bg-dark-ds-bg-primary/80 backdrop-blur-sm border-b border-ds-border dark:border-dark-ds-border">
+                <h1 id="main-header" class="text-2xl font-bold font-sans text-ds-text-primary dark:text-dark-ds-text-primary">Design System</h1>
+                <button id="theme-toggle" class="relative w-8 h-8 flex items-center justify-center p-1 rounded-full text-ds-text-secondary dark:text-dark-ds-text-secondary hover:text-ds-text-primary dark:hover:text-dark-ds-text-primary focus:outline-none focus-visible:ring-2 ring-ds-accent-primary" aria-label="Toggle theme">
+                  <div id="moon-icon-container">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>
+                  </div>
+                   <div id="sun-icon-container" class="hidden">
+                     <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>
+                   </div>
+                </button>
+            </header>
+
+            <div class="p-8">
+
+                <!-- FOUNDATIONS -->
+                <section id="colors" class="section-container">
+                    <h2 class="section-title">Colors</h2>
+                    <p class="section-subtitle">The foundational color palette for the ZoneFunnel brand, designed for clarity, accessibility, and aesthetic appeal.</p>
+                    
+                    <h3 class="component-title">Brand Palette</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-12">
+                        <div>
+                            <div class="swatch bg-ds-accent-primary"></div>
+                            <div class="swatch-info"><p class="swatch-name">Primary Accent</p><p class="swatch-meta">#F2B880 / ds-accent-primary</p></div>
+                        </div>
+                        <div>
+                            <div class="swatch bg-ds-accent-secondary"></div>
+                            <div class="swatch-info"><p class="swatch-name">Secondary Accent</p><p class="swatch-meta">#C8A376 / ds-accent-secondary</p></div>
+                        </div>
+                        <div>
+                            <div class="swatch bg-ds-text-primary"></div>
+                            <div class="swatch-info"><p class="swatch-name">Primary Text</p><p class="swatch-meta">#4C433D / ds-text-primary</p></div>
+                        </div>
+                        <div>
+                            <div class="swatch bg-ds-bg-primary border border-ds-border"></div>
+                            <div class="swatch-info"><p class="swatch-name">Primary Background</p><p class="swatch-meta">#FCFBF9 / ds-bg-primary</p></div>
+                        </div>
+                        <div>
+                            <div class="swatch bg-ds-bg-secondary border border-ds-border"></div>
+                            <div class="swatch-info"><p class="swatch-name">Highlight Background</p><p class="swatch-meta">#FAF6F1 / ds-bg-secondary</p></div>
+                        </div>
+                    </div>
+
+                    <h3 class="component-title">System Colors</h3>
+                     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div>
+                            <div class="swatch bg-system-success"></div>
+                            <div class="swatch-info"><p class="swatch-name">Success</p><p class="swatch-meta">#22c55e / system-success</p></div>
+                        </div>
+                        <div>
+                            <div class="swatch bg-system-error"></div>
+                            <div class="swatch-info"><p class="swatch-name">Error</p><p class="swatch-meta">#ef4444 / system-error</p></div>
+                        </div>
+                        <div>
+                            <div class="swatch bg-system-warning"></div>
+                            <div class="swatch-info"><p class="swatch-name">Warning</p><p class="swatch-meta">#f59e0b / system-warning</p></div>
+                        </div>
+                        <div>
+                            <div class="swatch bg-system-info"></div>
+                            <div class="swatch-info"><p class="swatch-name">Information</p><p class="swatch-meta">#3b82f6 / system-info</p></div>
+                        </div>
+                     </div>
+                </section>
+
+                <section id="typography" class="section-container">
+                    <h2 class="section-title">Typography</h2>
+                    <p class="section-subtitle">Our typographic scale ensures readability and hierarchy across all devices. We use 'Playfair Display' for headings and 'Inter' for body text.</p>
+                    <div class="component-preview space-y-8">
+                        <div>
+                            <p class="font-display text-6xl">Heading 1</p>
+                            <p class="swatch-meta">font-display / 3.75rem (60px) / font-bold</p>
+                        </div>
+                         <div>
+                            <p class="font-display text-5xl">Heading 2</p>
+                            <p class="swatch-meta">font-display / 3rem (48px) / font-bold</p>
+                        </div>
+                        <div>
+                            <p class="font-display text-4xl">Heading 3</p>
+                            <p class="swatch-meta">font-display / 2.25rem (36px) / font-bold</p>
+                        </div>
+                        <div>
+                            <p class="font-sans text-xl font-bold">Body Large Bold</p>
+                            <p class="swatch-meta">font-sans / 1.25rem (20px) / font-bold</p>
+                        </div>
+                        <div>
+                            <p class="font-sans text-lg">Body Large</p>
+                            <p class="swatch-meta">font-sans / 1.125rem (18px) / font-regular</p>
+                        </div>
+                         <div>
+                            <p class="font-sans text-base">Body Default</p>
+                            <p class="swatch-meta">font-sans / 1rem (16px) / font-regular</p>
+                        </div>
+                         <div>
+                            <p class="font-sans text-sm">Body Small</p>
+                            <p class="swatch-meta">font-sans / 0.875rem (14px) / font-regular</p>
+                        </div>
+                        <div>
+                            <p class="font-sans text-xs">Caption</p>
+                            <p class="swatch-meta">font-sans / 0.75rem (12px) / font-regular</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="spacing" class="section-container">
+                    <h2 class="section-title">Spacing & Grid</h2>
+                    <p class="section-subtitle">We use an 8-Point Grid System. All spacing and component dimensions are multiples of 8px, ensuring visual consistency and rhythm.</p>
+                     <div class="code-block">
+                        <p>// Tailwind Configuration</p>
+                        <p>theme: &#123;</p>
+                        <p>&nbsp;&nbsp;spacing: &#123;</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;'1': '8px',</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;'2': '16px',</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;'3': '24px',</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;'4': '32px',</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;'5': '40px',</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;'6': '48px',</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;// etc.</p>
+                        <p>&nbsp;&nbsp;&#125;</p>
+                        <p>&#125;</p>
+                    </div>
+                </section>
+
+                <section id="icons" class="section-container">
+                  <h2 class="section-title">Icons</h2>
+                  <p class="section-subtitle">Our icon set is designed to be clean, clear, and recognizable. All icons are outline style, built on a 24x24px grid with a 1.5px stroke width.</p>
+                  <div class="component-preview">
+                    <div class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-8 text-center text-ds-text-primary dark:text-dark-ds-text-primary">
+                        
+                        <div class="flex flex-col items-center gap-2">
+                           <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                           <p class="text-xs font-mono">Check</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                           <p class="text-xs font-mono">Order</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0011.667 0l3.181-3.183m-4.991-2.696a4.126 4.126 0 01-5.834 0M2.985 19.644L8.25 14.379a8.25 8.25 0 0111.667 0l5.265 5.265"></path></svg>
+                           <p class="text-xs font-mono">Subscription</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                           <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"></path></svg>
+                           <p class="text-xs font-mono">Inventory</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6.375a.75.75 0 01.75.75v10.5a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75V7.5a.75.75 0 01.75-.75z"></path></svg>
+                           <p class="text-xs font-mono">Warehouse</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                           <p class="text-xs font-mono">Burger</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                           <p class="text-xs font-mono">Close</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                           <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+                           <p class="text-xs font-mono">ChevronDown</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                           <p class="text-xs font-mono">ChatBubble</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>
+                           <p class="text-xs font-mono">Send</p>
+                        </div>
+                         <div class="flex flex-col items-center gap-2">
+                           <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"></path></svg>
+                           <p class="text-xs font-mono">MapPin</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                           <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 6.75z"></path></svg>
+                           <p class="text-xs font-mono">Phone</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                           <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path></svg>
+                           <p class="text-xs font-mono">Envelope</p>
+                        </div>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- COMPONENTS -->
+                <section id="buttons" class="section-container">
+                    <h2 class="section-title">Buttons</h2>
+                    <p class="section-subtitle">Buttons are used for primary actions. They come in different types, sizes, and states to fit various contexts.</p>
+                    
+                    <div class="component-preview component-group">
+                      <!-- Primary Buttons -->
+                      <div>
+                        <h3 class="component-title">Primary (Solid)</h3>
+                        <div class="component-group">
+                           <div class="component-row">
+                             <p class="component-label">Large (.btn-lg)</p>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg bg-ds-accent-primary text-ds-text-on-accent transition-all">Default</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg bg-ds-accent-primary-hover text-ds-text-on-accent transition-all">Hover</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg bg-ds-accent-primary text-ds-text-on-accent transition-all scale-95 ring-2 ring-offset-2 ring-ds-accent-primary ring-offset-ds-bg-secondary dark:ring-offset-dark-ds-bg-secondary">Active</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg bg-ds-text-secondary text-white/70 transition-all cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                           <div class="component-row">
+                             <p class="component-label">Default (.btn-md)</p>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md bg-ds-accent-primary text-ds-text-on-accent transition-all">Default</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md bg-ds-accent-primary-hover text-ds-text-on-accent transition-all">Hover</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md bg-ds-accent-primary text-ds-text-on-accent transition-all scale-95 ring-2 ring-offset-2 ring-ds-accent-primary ring-offset-ds-bg-secondary dark:ring-offset-dark-ds-bg-secondary">Active</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md bg-ds-text-secondary text-white/70 transition-all cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                           <div class="component-row">
+                             <p class="component-label">Small (.btn-sm)</p>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md bg-ds-accent-primary text-ds-text-on-accent transition-all">Default</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md bg-ds-accent-primary-hover text-ds-text-on-accent transition-all">Hover</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md bg-ds-accent-primary text-ds-text-on-accent transition-all scale-95 ring-2 ring-offset-2 ring-ds-accent-primary ring-offset-ds-bg-secondary dark:ring-offset-dark-ds-bg-secondary">Active</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md bg-ds-text-secondary text-white/70 transition-all cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                        </div>
+                      </div>
+
+                      <!-- Secondary Buttons -->
+                      <div>
+                        <h3 class="component-title">Secondary (Outline)</h3>
+                        <div class="component-group">
+                           <div class="component-row">
+                             <p class="component-label">Large (.btn-lg)</p>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg bg-transparent text-ds-accent-primary border border-ds-accent-primary">Default</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg bg-ds-accent-primary/10 text-ds-accent-primary border border-ds-accent-primary">Hover</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg bg-ds-accent-primary/20 text-ds-accent-primary border border-ds-accent-primary scale-95">Active</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg bg-transparent text-ds-text-secondary/50 border border-ds-text-secondary/50 cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                           <div class="component-row">
+                             <p class="component-label">Default (.btn-md)</p>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md bg-transparent text-ds-accent-primary border border-ds-accent-primary">Default</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md bg-ds-accent-primary/10 text-ds-accent-primary border border-ds-accent-primary">Hover</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md bg-ds-accent-primary/20 text-ds-accent-primary border border-ds-accent-primary scale-95">Active</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md bg-transparent text-ds-text-secondary/50 border border-ds-text-secondary/50 cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                           <div class="component-row">
+                             <p class="component-label">Small (.btn-sm)</p>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md bg-transparent text-ds-accent-primary border border-ds-accent-primary">Default</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md bg-ds-accent-primary/10 text-ds-accent-primary border border-ds-accent-primary">Hover</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md bg-ds-accent-primary/20 text-ds-accent-primary border border-ds-accent-primary scale-95">Active</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md bg-transparent text-ds-text-secondary/50 border border-ds-text-secondary/50 cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                        </div>
+                      </div>
+
+                       <!-- Ghost Buttons -->
+                      <div>
+                        <h3 class="component-title">Ghost (Text-only)</h3>
+                        <div class="component-group">
+                           <div class="component-row">
+                             <p class="component-label">Large (.btn-lg)</p>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg text-ds-accent-primary">Default</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg text-ds-accent-primary bg-ds-accent-primary/10">Hover</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg text-ds-accent-primary bg-ds-accent-primary/20 scale-95">Active</button>
+                             <button class="px-8 py-3 text-lg font-bold rounded-lg text-ds-text-secondary/50 cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                           <div class="component-row">
+                             <p class="component-label">Default (.btn-md)</p>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md text-ds-accent-primary">Default</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md text-ds-accent-primary bg-ds-accent-primary/10">Hover</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md text-ds-accent-primary bg-ds-accent-primary/20 scale-95">Active</button>
+                             <button class="px-6 py-2.5 text-base font-bold rounded-md text-ds-text-secondary/50 cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                           <div class="component-row">
+                             <p class="component-label">Small (.btn-sm)</p>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md text-ds-accent-primary">Default</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md text-ds-accent-primary bg-ds-accent-primary/10">Hover</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md text-ds-accent-primary bg-ds-accent-primary/20 scale-95">Active</button>
+                             <button class="px-4 py-2 text-sm font-bold rounded-md text-ds-text-secondary/50 cursor-not-allowed" disabled>Disabled</button>
+                           </div>
+                        </div>
+                      </div>
+
+                    </div>
+                </section>
+
+                <section id="forms" class="section-container">
+                    <h2 class="section-title">Forms & Inputs</h2>
+                    <p class="section-subtitle">Consistent and accessible form controls are crucial for a good user experience.</p>
+                    
+                    <div class="component-preview component-group">
+                      <!-- Text Input -->
+                      <div>
+                          <h3 class="component-title">Text Input</h3>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                              <div>
+                                  <label for="text-default" class="block font-medium text-ds-text-primary dark:text-dark-ds-text-primary mb-2">Default</label>
+                                  <input type="text" id="text-default" placeholder="Enter your name" class="w-full px-4 py-3 bg-ds-bg-primary dark:bg-dark-ds-bg-primary border border-ds-border dark:border-dark-ds-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ds-accent-primary focus:border-ds-accent-primary">
+                              </div>
+                              <div>
+                                  <label for="text-focus" class="block font-medium text-ds-text-primary dark:text-dark-ds-text-primary mb-2">Focus</label>
+                                  <input type="text" id="text-focus" placeholder="Enter your name" class="w-full px-4 py-3 bg-ds-bg-primary dark:bg-dark-ds-bg-primary border border-ds-accent-primary rounded-lg outline-none ring-2 ring-ds-accent-primary">
+                              </div>
+                              <div>
+                                  <label for="text-error" class="block font-medium text-ds-text-primary dark:text-dark-ds-text-primary mb-2">Invalid / Error</label>
+                                  <input type="text" id="text-error" value="invalid-email" class="w-full px-4 py-3 bg-ds-bg-primary dark:bg-dark-ds-bg-primary border border-system-error rounded-lg focus:outline-none focus:ring-2 focus:ring-system-error focus:border-system-error">
+                                  <p class="text-sm text-system-error mt-1">Please enter a valid email.</p>
+                              </div>
+                              <div>
+                                  <label for="text-disabled" class="block font-medium text-ds-text-primary dark:text-dark-ds-text-primary mb-2">Disabled</label>
+                                  <input type="text" id="text-disabled" placeholder="Cannot edit" class="w-full px-4 py-3 bg-ds-bg-tertiary dark:bg-dark-ds-bg-tertiary border border-ds-border dark:border-dark-ds-border rounded-lg cursor-not-allowed" disabled>
+                              </div>
+                          </div>
+                      </div>
+                       <!-- Textarea -->
+                      <div>
+                          <h3 class="component-title">Textarea</h3>
+                          <label for="textarea-default" class="block font-medium text-ds-text-primary dark:text-dark-ds-text-primary mb-2">Default</label>
+                          <textarea id="textarea-default" placeholder="Your message..." rows="4" class="w-full px-4 py-3 bg-ds-bg-primary dark:bg-dark-ds-bg-primary border border-ds-border dark:border-dark-ds-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ds-accent-primary focus:border-ds-accent-primary"></textarea>
+                      </div>
+                       <!-- Select / Dropdown -->
+                      <div>
+                          <h3 class="component-title">Dropdown</h3>
+                          <label for="select-default" class="block font-medium text-ds-text-primary dark:text-dark-ds-text-primary mb-2">Default</label>
+                          <select id="select-default" class="w-full px-4 py-3 bg-ds-bg-primary dark:bg-dark-ds-bg-primary border border-ds-border dark:border-dark-ds-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ds-accent-primary focus:border-ds-accent-primary">
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                            <option>Option 3</option>
+                          </select>
+                      </div>
+                    </div>
+                </section>
+
+                <section id="cards" class="section-container">
+                    <h2 class="section-title">Cards</h2>
+                    <p class="section-subtitle">Cards are flexible containers for content, with clear states to indicate interactivity.</p>
+                    <div class="component-preview">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <!-- Default Card -->
+                            <div class="p-6 rounded-xl bg-ds-bg-primary dark:bg-dark-ds-bg-primary shadow-sm border border-ds-border dark:border-dark-ds-border transition-all duration-300">
+                                <h4 class="component-label mb-2">Default</h4>
+                                <h3 class="font-bold text-ds-text-primary dark:text-dark-ds-text-primary">Card Title</h3>
+                                <p class="text-ds-text-secondary dark:text-dark-ds-text-secondary mt-2">This is a standard card with default shadow.</p>
+                            </div>
+                            <!-- Hover Card -->
+                             <div class="p-6 rounded-xl bg-ds-bg-primary dark:bg-dark-ds-bg-primary shadow-xl border border-ds-border dark:border-dark-ds-border transform -translate-y-1 scale-105 transition-all duration-300">
+                                <h4 class="component-label mb-2">Hover</h4>
+                                <h3 class="font-bold text-ds-text-primary dark:text-dark-ds-text-primary">Card Title</h3>
+                                <p class="text-ds-text-secondary dark:text-dark-ds-text-secondary mt-2">This card has hover styles applied statically.</p>
+                            </div>
+                            <!-- Active Card -->
+                            <div class="p-6 rounded-xl bg-ds-bg-primary dark:bg-dark-ds-bg-primary shadow-sm border border-ds-accent-primary transition-all duration-300">
+                                <h4 class="component-label mb-2">Active / Selected</h4>
+                                <h3 class="font-bold text-ds-text-primary dark:text-dark-ds-text-primary">Card Title</h3>
+                                <p class="text-ds-text-secondary dark:text-dark-ds-text-secondary mt-2">This card has an active state border.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="navigation" class="section-container">
+                    <h2 class="section-title">Navigation & Structure</h2>
+                    <p class="section-subtitle">Components that help users understand their location and navigate through content.</p>
+                    <div class="component-preview component-group">
+                        <!-- Breadcrumbs -->
+                        <div>
+                            <h3 class="component-title">Breadcrumbs</h3>
+                            <nav aria-label="Breadcrumb">
+                                <ol class="flex items-center gap-2 text-sm text-ds-text-secondary dark:text-dark-ds-text-secondary">
+                                    <li><a href="#" class="hover:underline">Home</a></li>
+                                    <li><span class="text-ds-text-secondary/50">/</span></li>
+                                    <li><a href="#" class="hover:underline">Services</a></li>
+                                    <li><span class="text-ds-text-secondary/50">/</span></li>
+                                    <li class="font-bold text-ds-text-primary dark:text-dark-ds-text-primary" aria-current="page">Order Management</li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <!-- Pagination -->
+                         <div>
+                            <h3 class="component-title">Pagination</h3>
+                            <nav aria-label="Pagination">
+                                <ul class="flex items-center -space-x-px h-10 text-base">
+                                    <li><a href="#" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-ds-text-secondary bg-ds-bg-primary border border-ds-border rounded-l-lg hover:bg-ds-bg-secondary hover:text-ds-text-primary dark:bg-dark-ds-bg-primary dark:border-dark-ds-border dark:text-dark-ds-text-secondary dark:hover:bg-dark-ds-bg-secondary dark:hover:text-white">&lt;&lt; Prev</a></li>
+                                    <li><a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-ds-text-secondary bg-ds-bg-primary border border-ds-border hover:bg-ds-bg-secondary hover:text-ds-text-primary dark:bg-dark-ds-bg-primary dark:border-dark-ds-border dark:text-dark-ds-text-secondary dark:hover:bg-dark-ds-bg-secondary dark:hover:text-white">1</a></li>
+                                    <li><a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-ds-text-secondary bg-ds-bg-primary border border-ds-border hover:bg-ds-bg-secondary hover:text-ds-text-primary dark:bg-dark-ds-bg-primary dark:border-dark-ds-border dark:text-dark-ds-text-secondary dark:hover:bg-dark-ds-bg-secondary dark:hover:text-white">2</a></li>
+                                    <li><a href="#" aria-current="page" class="z-10 flex items-center justify-center px-4 h-10 leading-tight text-ds-text-on-accent bg-ds-accent-primary border border-ds-accent-primary hover:bg-ds-accent-primary-hover dark:border-ds-accent-primary dark:text-ds-text-on-accent">3</a></li>
+                                    <li><a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-ds-text-secondary bg-ds-bg-primary border border-ds-border hover:bg-ds-bg-secondary hover:text-ds-text-primary dark:bg-dark-ds-bg-primary dark:border-dark-ds-border dark:text-dark-ds-text-secondary dark:hover:bg-dark-ds-bg-secondary dark:hover:text-white">4</a></li>
+                                    <li><a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-ds-text-secondary bg-ds-bg-primary border border-ds-border hover:bg-ds-bg-secondary hover:text-ds-text-primary dark:bg-dark-ds-bg-primary dark:border-dark-ds-border dark:text-dark-ds-text-secondary dark:hover:bg-dark-ds-bg-secondary dark:hover:text-white">5</a></li>
+                                    <li><a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-ds-text-secondary bg-ds-bg-primary border border-ds-border rounded-r-lg hover:bg-ds-bg-secondary hover:text-ds-text-primary dark:bg-dark-ds-bg-primary dark:border-dark-ds-border dark:text-dark-ds-text-secondary dark:hover:bg-dark-ds-bg-secondary dark:hover:text-white">Next &gt;&gt;</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="feedback" class="section-container">
+                    <h2 class="section-title">Feedback & Status</h2>
+                    <p class="section-subtitle">Provide users with timely feedback and clear status indicators for actions and information.</p>
+                    <div class="component-preview component-group">
+                      <!-- Notifications / Alerts -->
+                      <div>
+                        <h3 class="component-title">Notifications / Alerts</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center p-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/></svg>
+                                <div><span class="font-medium">Success!</span> Your profile has been updated.</div>
+                            </div>
+                            <div class="flex items-center p-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+                               <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/></svg>
+                                <div><span class="font-medium">Warning!</span> Your free trial is about to expire.</div>
+                            </div>
+                             <div class="flex items-center p-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/></svg>
+                                <div><span class="font-medium">Error!</span> Failed to process payment.</div>
+                            </div>
+                             <div class="flex items-center p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/></svg>
+                                <div><span class="font-medium">Info:</span> A new software update is available.</div>
+                            </div>
+                        </div>
+                      </div>
+                      <!-- Badges & Tags -->
+                      <div>
+                        <h3 class="component-title">Badges & Tags</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <span class="bg-system-success/10 text-system-success text-xs font-medium px-2.5 py-1 rounded-full">Active</span>
+                            <span class="bg-system-warning/10 text-system-warning text-xs font-medium px-2.5 py-1 rounded-full">Pending</span>
+                            <span class="bg-ds-text-secondary/10 text-ds-text-secondary dark:bg-dark-ds-text-secondary/20 dark:text-dark-ds-text-secondary text-xs font-medium px-2.5 py-1 rounded-full">Shipped</span>
+                            <span class="bg-system-error/10 text-system-error text-xs font-medium px-2.5 py-1 rounded-full">Failed</span>
+                        </div>
+                      </div>
+                      <!-- Tooltip -->
+                      <div>
+                         <h3 class="component-title">Tooltip</h3>
+                         <div class="relative group inline-block">
+                            <button class="flex items-center gap-2 text-ds-text-secondary dark:text-dark-ds-text-secondary">
+                              <span>Hover for details</span>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM8.94 6.94a.75.75 0 11-1.061-1.061 3 3 0 112.871 5.026v.345a.75.75 0 01-1.5 0v-.5c0-.72.57-1.172 1.081-1.287A1.5 1.5 0 108.94 6.94zM10 15a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-3 py-1.5 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 group-hover:opacity-90 dark:bg-gray-700 transition-opacity">
+                                This is a helpful tooltip.
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-gray-900 dark:border-t-gray-700"></div>
+                            </div>
+                         </div>
+                      </div>
+                      <!-- Loader -->
+                      <div>
+                        <h3 class="component-title">Loader / Spinner</h3>
+                        <svg class="animate-spin h-8 w-8 text-ds-accent-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      </div>
+                    </div>
+                </section>
+                
+                <section id="data-display" class="section-container">
+                    <h2 class="section-title">Data & Content Display</h2>
+                    <p class="section-subtitle">Components for displaying structured data and content to the user.</p>
+                    <div class="component-preview component-group">
+                        <!-- Modal / Dialog -->
+                        <div>
+                            <h3 class="component-title">Modal / Dialog</h3>
+                            <button id="openModalBtn" class="px-6 py-2.5 text-base font-bold rounded-md bg-ds-accent-primary text-ds-text-on-accent transition-all">Open Modal</button>
+
+                            <div id="modal-container" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden">
+                                <div id="modal-content" class="bg-ds-bg-primary dark:bg-dark-ds-bg-secondary w-full max-w-md p-6 rounded-lg shadow-xl" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                                    <h3 id="modal-title" class="text-lg font-bold text-ds-text-primary dark:text-dark-ds-text-primary">Delete Item</h3>
+                                    <p class="mt-2 text-sm text-ds-text-secondary dark:text-dark-ds-text-secondary">Are you sure you want to delete this item? This action cannot be undone.</p>
+                                    <div class="mt-6 flex justify-end gap-4">
+                                        <button id="closeModalBtn" class="px-4 py-2 text-sm font-bold rounded-md bg-transparent text-ds-text-secondary hover:bg-ds-bg-tertiary dark:hover:bg-dark-ds-bg-tertiary">Cancel</button>
+                                        <button class="px-4 py-2 text-sm font-bold rounded-md bg-system-error text-white">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Table -->
+                        <div>
+                            <h3 class="component-title">Data Table</h3>
+                            <div class="relative overflow-x-auto rounded-lg border border-ds-border dark:border-dark-ds-border">
+                                <table class="w-full text-sm text-left text-ds-text-secondary dark:text-dark-ds-text-secondary">
+                                    <thead class="text-xs text-ds-text-primary dark:text-dark-ds-text-primary uppercase bg-ds-bg-secondary dark:bg-dark-ds-bg-secondary">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">Product Name</th>
+                                            <th scope="col" class="px-6 py-3">SKU</th>
+                                            <th scope="col" class="px-6 py-3">Status</th>
+                                            <th scope="col" class="px-6 py-3">Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-ds-bg-primary dark:bg-dark-ds-bg-primary border-b dark:border-dark-ds-border hover:bg-ds-bg-secondary dark:hover:bg-dark-ds-bg-secondary">
+                                            <th scope="row" class="px-6 py-4 font-medium text-ds-text-primary dark:text-dark-ds-text-primary whitespace-nowrap">Magic Widget</th>
+                                            <td class="px-6 py-4">MW-001</td>
+                                            <td class="px-6 py-4"><span class="bg-system-success/10 text-system-success text-xs font-medium px-2.5 py-1 rounded-full">In Stock</span></td>
+                                            <td class="px-6 py-4">$29.99</td>
+                                        </tr>
+                                         <tr class="bg-ds-bg-tertiary/50 dark:bg-dark-ds-bg-tertiary/50 border-b dark:border-dark-ds-border hover:bg-ds-bg-secondary dark:hover:bg-dark-ds-bg-secondary">
+                                            <th scope="row" class="px-6 py-4 font-medium text-ds-text-primary dark:text-dark-ds-text-primary whitespace-nowrap">Super Gadget</th>
+                                            <td class="px-6 py-4">SG-002</td>
+                                            <td class="px-6 py-4"><span class="bg-system-warning/10 text-system-warning text-xs font-medium px-2.5 py-1 rounded-full">Low Stock</span></td>
+                                            <td class="px-6 py-4">$99.99</td>
+                                        </tr>
+                                         <tr class="bg-ds-bg-primary dark:bg-dark-ds-bg-primary hover:bg-ds-bg-secondary dark:hover:bg-dark-ds-bg-secondary">
+                                            <th scope="row" class="px-6 py-4 font-medium text-ds-text-primary dark:text-dark-ds-text-primary whitespace-nowrap">Gizmo Pro</th>
+                                            <td class="px-6 py-4">GP-003</td>
+                                            <td class="px-6 py-4"><span class="bg-system-error/10 text-system-error text-xs font-medium px-2.5 py-1 rounded-full">Out of Stock</span></td>
+                                            <td class="px-6 py-4">$149.99</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Avatars -->
+                        <div>
+                            <h3 class="component-title">Avatars</h3>
+                            <div class="flex flex-wrap items-center gap-8">
+                                <div class="flex items-center gap-4">
+                                  <img class="w-8 h-8 rounded-full" src="https://picsum.photos/id/1005/32/32" alt="Small Avatar">
+                                  <img class="w-12 h-12 rounded-full" src="https://picsum.photos/id/1011/48/48" alt="Medium Avatar">
+                                  <img class="w-16 h-16 rounded-full" src="https://picsum.photos/id/1027/64/64" alt="Large Avatar">
+                                </div>
+                                <div class="flex -space-x-4">
+                                    <img class="w-10 h-10 border border-white rounded-full dark:border-gray-800" src="https://picsum.photos/id/1005/40/40" alt="">
+                                    <img class="w-10 h-10 border border-white rounded-full dark:border-gray-800" src="https://picsum.photos/id/1011/40/40" alt="">
+                                    <img class="w-10 h-10 border border-white rounded-full dark:border-gray-800" src="https://picsum.photos/id/1027/40/40" alt="">
+                                    <a class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-gray-700 border border-white rounded-full hover:bg-gray-600 dark:border-gray-800" href="#">+9</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Theme Toggler ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const htmlEl = document.documentElement;
+            const moonIcon = document.getElementById('moon-icon-container');
+            const sunIcon = document.getElementById('sun-icon-container');
+
+            const updateIcons = () => {
+                if (htmlEl.classList.contains('dark')) {
+                    moonIcon.classList.add('hidden');
+                    sunIcon.classList.remove('hidden');
+                } else {
+                    moonIcon.classList.remove('hidden');
+                    sunIcon.classList.add('hidden');
+                }
+            };
+
+            themeToggle.addEventListener('click', () => {
+                if (htmlEl.classList.contains('dark')) {
+                    htmlEl.classList.remove('dark');
+                    htmlEl.classList.add('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    htmlEl.classList.remove('light');
+                    htmlEl.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+                updateIcons();
+            });
+            updateIcons();
+
+            // --- Sidebar Active Link ---
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('#sidebar-nav a');
+            const mainHeader = document.getElementById('main-header');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                        });
+                        const sectionTitle = entry.target.querySelector('.section-title').textContent;
+                        mainHeader.textContent = sectionTitle;
+                    }
+                });
+            }, { rootMargin: '-25% 0px -75% 0px', threshold: 0 });
+
+            sections.forEach(section => observer.observe(section));
+
+            // --- Modal ---
+            const openModalBtn = document.getElementById('openModalBtn');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const modalContainer = document.getElementById('modal-container');
+
+            if (openModalBtn && closeModalBtn && modalContainer) {
+                openModalBtn.addEventListener('click', () => {
+                    modalContainer.classList.remove('hidden');
+                });
+
+                closeModalBtn.addEventListener('click', () => {
+                    modalContainer.classList.add('hidden');
+                });
+                
+                modalContainer.addEventListener('click', (e) => {
+                    if (e.target === modalContainer) {
+                        modalContainer.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
