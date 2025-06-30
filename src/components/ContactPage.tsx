@@ -1,7 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Section } from './Layout';
-import { MapPinIcon, PhoneIcon, EnvelopeIcon } from './icons.tsx';
+import { MapPinIcon, PhoneIcon, EnvelopeIcon } from './icons';
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 type Errors = {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { BurgerIcon, CloseIcon } from './icons.tsx';
+import { BurgerIcon, CloseIcon } from './icons';
 import { handleNavClick } from '../utils/navigation';
 import { ThemeToggle } from './ThemeToggle';
 

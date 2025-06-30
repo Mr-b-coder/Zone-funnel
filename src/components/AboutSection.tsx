@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { ChevronDownIcon } from './icons.tsx'; // This is still needed
+import { ChevronDownIcon } from './icons';// This is still needed
 import { Section, SectionTitle } from './Layout';
 
 // REMOVED: Old illustration component imports

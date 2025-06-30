@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChatBubbleIcon, CloseIcon, SendIcon } from './icons.tsx';
+import { ChatBubbleIcon, CloseIcon, SendIcon } from './icons';
 import { createChat } from '../utils/gemini';
 import type { Chat } from '@google/genai';
 
