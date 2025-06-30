@@ -81,13 +81,13 @@ const HeroSection: React.FC = () => (
                         {/* --- UPDATED: Replaced component with <img> tags --- */}
                         {/* Light Mode Image */}
                         <img
-                            src="/assets/hero-illustration-light.svg"
+                            src="/assets/hero-illustration-light.png"
                             alt="Illustration of a connected global logistics network"
                             className="block dark:hidden w-full h-auto"
                         />
                         {/* Dark Mode Image */}
                         <img
-                            src="/assets/hero-illustration-dark.svg"
+                            src="/assets/hero-illustration-dark.png"
                             alt="Illustration of a connected global logistics network"
                             className="hidden dark:block w-full h-auto"
                         />
