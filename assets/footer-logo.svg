@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1136.68 230.23">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #757575;
+      }
+
+      .cls-2, .cls-3 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-4 {
+        font-family: FinalSix-Medium, FinalSix;
+        font-size: 195.44px;
+        font-weight: 500;
+      }
+
+      .cls-5, .cls-3, .cls-6 {
+        fill: #b2b2b2;
+      }
+
+      .cls-6 {
+        letter-spacing: -.05em;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <text class="cls-4" transform="translate(0 170.03)"><tspan class="cls-1" x="0" y="0">Z</tspan><tspan class="cls-2" x="127.43" y="0">one</tspan><tspan class="cls-5" x="483.13" y="0">F</tspan><tspan class="cls-6" x="607.23" y="0">u</tspan><tspan class="cls-3" x="723.33" y="0">nnel</tspan></text>
+  </g>
+</svg>

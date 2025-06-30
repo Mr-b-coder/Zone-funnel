@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-background-primary text-text-secondary font-sans transition-colors duration-300 ease-in-out dark:bg-dark-bg-primary dark:text-dark-text-primary;
+  }
+  
+  /* ===== Text Selection ===== */
+  ::selection {
+      @apply bg-accent-primary text-text-on-accent;
+  }
+
+  html.dark ::selection {
+      @apply bg-border-interactive text-dark-heading;
+  }
+}
+
+@layer components {
+  /* ===== Accessibility Skip Link ===== */
+  .skip-link {
+    @apply absolute -top-24 left-0 bg-accent-primary text-text-on-accent p-2 z-[100] transition-all ease-in-out duration-300 rounded-br-lg;
+  }
+  .skip-link:focus {
+    @apply top-0;
+  }
+
+  /* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #A07F56 #EAE4DD;
+  }
+
+  html.dark * {
+      scrollbar-color: #F4C18D #263941;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #EAE4DD;
+  }
+
+  html.dark *::-webkit-scrollbar-track {
+      background: #263941;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #A07F56;
+    border-radius: 10px;
+    border: 3px solid #EAE4DD;
+  }
+
+  html.dark *::-webkit-scrollbar-thumb {
+      background-color: #F4C18D;
+      border-color: #263941;
+  }
+}
+
+@layer utilities {
+    /* Pause animation on hover over the container */
+    .group:hover .animate-scroll {
+      animation-play-state: paused;
+    }
+}
